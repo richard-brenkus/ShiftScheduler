@@ -18,19 +18,26 @@ Once a request for an employee has been entered and stored, the button with the 
 
 Be careful—the dates in a request get only overwritten if the user deselects them first, and then selects them (to make the calendar's date fields green) again! If the user doesn't reselect the dates, then the original dates won't get stored in the altered request.
 
-Finally, the user clicks on Calculate shifts to generate a calendar. If the checkbox archive next is selected, then the last 5 days of the newly generated calendar get stored into the archive, and they can be used during next month's calculation. If ignore previous month is selected, then the archived last 5 days will be ignored during the next calculation. 
+Finally, the user clicks on Calculate shifts to generate a calendar. If the checkbox archive next is selected, then the last 5 days of the newly generated calendar get stored in the archive, and they can be used during next month's calculation. If ignore previous month is selected, then the archived last 5 days will be ignored during the next calculation. 
 
-The user can also decide whether he'd like the algorithm to consider the employees' preferences as to whom they'd like to work with, or whom they'd like to avoid. For optimal results, the user can adjust the priority of each request by reopening any of the shift types in the Manage shift schedule tab, and by altering the employee's request. The user can then change the parameters in the request, save them, and perform a new calculation until the result is a fully filled-out calendar, or until the most amount of lines are filled with names. Please note that it is not always possible to fully fill out a calendar (for instance, if no employee has requested to work on a particular day, then this day will remain empty in the calendar).
+The user can also decide whether he'd like the algorithm to consider the employees' preferences as to whom they'd like to work with, or whom they'd like to avoid. For optimal results, the user can adjust the priority of each request by reopening any of the shift types in the Manage shift schedule tab, and by altering the employee's request. The user can then change the parameters in the request, save them, and perform a new calculation until the result is a fully filled-out calendar, or until the most possible amount of lines are filled with names. Please note that it is not always possible to fully fill out a calendar (for instance, if no employee has requested to work on a particular day, then this day will remain empty in the calendar).
 
 Short manual:
 
 1.) click on Employee maintenance – Add employee – Save
+
 2.) click on Create shift pool
-3.) click on Manage shift schedule – Shift type 1 to Shit type 4
+
+3.) click on Manage shift schedule – Shift type 1 to Shift type 4
+
 4.) click on the employee's button
+
 5.) select the requested dates, change the shift count, weekend count and priority if needed, combine with other employees if needed (this can be also set up in the Add employee window), then click on OK
+
 6.) select or deselect the checkboxes in the bottom part of the window as needed
+
 7.) click on Calculate shifts
+
 
 GUI Toolbar description:
 
@@ -58,3 +65,5 @@ The second part I didn't create myself is the IntStream.rangeClosed stream in th
 
 
 It took me about 6 weeks to design, write, debug and test the Shift Scheduler app.
+
+The runnable .jrat file that I've uploaded works with JRE 11.0.2 available here: https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html

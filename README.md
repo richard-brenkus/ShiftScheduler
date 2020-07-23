@@ -2,7 +2,7 @@
 
 Purpose:
 
-The Shift Scheduler solves a real-life scheduling problem. It produces a monthly calendar that contains the names of the employees who are best suited to work on each day in the month, as per the employees' requests.
+The Shift Scheduler solves a real-life scheduling problem. It produces a monthly calendar that contains the names of the employees who are best suited to work on each day in the month, based on the employees' requests.
 
 Function description:
 

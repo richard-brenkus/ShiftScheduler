@@ -57,7 +57,7 @@ Notes:
 
 The Shift Scheduler app is currently used in a hospital in the Czech Republic, therefore the prefix MUDr. (medical doctor) is added in front of each name in the output calendar.
 
-There are two parts in the app that I didn't create myself. The first part is the GUIcalendarPanel class, the source code for which I'd downloaded from https://blog.eduonix.com/java-programming-2/how-to-use-date-picker-component-in-java/.  I did alter this class heavily, though, by adding the functionality of storing the selected dates (or removing them when deselected) instead of just displaying the dates to the user, and I also added the functionality of displaying the previously entered dates in the calendar whenever a request is reopened. 
+There are two parts in the app that I didn't create myself. The first part is the GUIcalendarPanel class, the source code for which I'd downloaded from https://blog.eduonix.com/java-programming-2/how-to-use-date-picker-component-in-java/.  I did alter this class heavily, though, by adding the functionality of storing the selected dates (or removing them when deselected) instead of just displaying the dates to the user, and I also added the functionality of displaying the previously entered dates in a textfield below the calendar whenever a request is reopened. 
 
 The second part I didn't create myself is the IntStream.rangeClosed stream in the weekendFinder() method in the Supercalendar class, but I also altered this one so that the method returns a List<Integer> instead of just printing out the dates. The credit for this block goes to Ortomala Lokni who has posted it here: https://stackoverflow.com/questions/3272454/in-java-get-all-weekend-dates-in-a-given-month
 

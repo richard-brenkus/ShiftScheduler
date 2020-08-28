@@ -325,9 +325,12 @@ public class Supercalendar implements Serializable{
 	} //close searcherWithWeekends
 	
 	public static void searcher(Request r, int shiftType, int day, Map<Integer, List<Employee>> supercalendarInput) {
+		
+		List<Integer> weekendsOnly = r.getIntegerDates().stream().filter((i) -> weekends.contains(i)).collect(Collectors.toList());
+		
 		if(r.getEmployee().getShiftDetails().contains(shiftType)) {
-			if(dayChecker(day, r, supercalendarInput) && shiftCounter.get(r.getEmployee()) < r.getShiftCount()
-					&& (weekendCounter.get(r.getEmployee()) <= r.getWeekendCount() || r.getIntegerDates().stream().noneMatch(x -> weekends.contains(x)))	//new conditions added
+			if(dayChecker(day, r, supercalendarInput) && shiftCounter.get(r.getEmployee()) < r.getShiftCount() && !weekendsOnly.contains(day)
+	//				&& (weekendCounter.get(r.getEmployee()) <= r.getWeekendCount() || r.getIntegerDates().stream().noneMatch(x -> weekends.contains(x)))	//new conditions added
 					&& previousMonthChecker(day, r)
 					&& peerFinder(day, r, preferEmployees)
 					&& peerShunner(day, r, avoidEmployees)

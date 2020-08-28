@@ -180,7 +180,7 @@ public class Supercalendar implements Serializable{
 			} //close for monthLength
 		
 //create output, show the calendar with all names:
-			GUIoutputCalendar outputWindow = new GUIoutputCalendar(supercalendar1, supercalendar2, supercalendar3, supercalendar4, month, year);			
+			GUIoutputCalendar outputWindow = new GUIoutputCalendar(supercalendar1, supercalendar2, supercalendar3, supercalendar4, month, year, weekends);			
 	} //close requestProcessor
 	
 						
@@ -327,6 +327,7 @@ public class Supercalendar implements Serializable{
 	public static void searcher(Request r, int shiftType, int day, Map<Integer, List<Employee>> supercalendarInput) {
 		if(r.getEmployee().getShiftDetails().contains(shiftType)) {
 			if(dayChecker(day, r, supercalendarInput) && shiftCounter.get(r.getEmployee()) < r.getShiftCount()
+					&& (weekendCounter.get(r.getEmployee()) <= r.getWeekendCount() || r.getIntegerDates().stream().noneMatch(x -> weekends.contains(x)))	//new conditions added
 					&& previousMonthChecker(day, r)
 					&& peerFinder(day, r, preferEmployees)
 					&& peerShunner(day, r, avoidEmployees)

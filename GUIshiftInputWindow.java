@@ -36,12 +36,12 @@ public class GUIshiftInputWindow extends JDialog {
 		for(Employee emp : restoredList) {
 			JButton btnNewButton = new JButton(emp.getEmployeeDetailsAsString());
 			panel.add(btnNewButton);
-			if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString()))
+			if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()))
 				btnNewButton.setBackground(Color.GREEN);
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					GUIinnerInputWindow innerWindow = new GUIinnerInputWindow(GUIshiftInputWindow.this, emp);
-					if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString()))
+					if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()))
 						btnNewButton.setBackground(Color.GREEN);
 				}
 			});

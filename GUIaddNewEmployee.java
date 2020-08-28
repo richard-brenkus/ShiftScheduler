@@ -2,6 +2,10 @@ package com.richardbrenkus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,7 +22,12 @@ public class GUIaddNewEmployee extends JDialog implements Serializable{
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	private static String[] employeeNames; 
+	private static String[] employeeNames;
+	private int shift1; //
+	private int shift2; //
+	private int shift3; //
+	private int shift4; //
+	private LinkedList<Integer> shifts;
 	
 	public GUIaddNewEmployee() {
 		setModal(true);
@@ -152,32 +161,99 @@ public class GUIaddNewEmployee extends JDialog implements Serializable{
 		btnNewButton.setBounds(242, 351, 89, 23);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+//new code:				
+				
+				shifts = new LinkedList<>();
+				
+				shift1 = 1;
+				shift2 = 2;
+				shift3 = 3;
+				shift4 = 4;
+
+				if(chckbxNewCheckBox.isSelected()) {
+					shifts.add(shift1);
+				}
+				
+				if(chckbxNewCheckBox_1.isSelected()) {
+					shifts.add(shift2);
+				}
+				
+				if(chckbxNewCheckBox_2.isSelected()) {
+					shift3 = 3;
+					shifts.add(shift3);
+				}
+				
+				if(chckbxNewCheckBox_3.isSelected()) {
+					shift4 = 4;
+					shifts.add(shift4);
+				}
+							
+				shifts.sort(null);
+				
+//end of new code
+				
 				selectedNamesPrefers.addAll(combineWithEmployeesList.getSelectedValuesList());
 				selectedNamesAvoids.addAll(avoidEmployeesList.getSelectedValuesList());
 				if(textField.getText().toString().isEmpty() || textField_1.getText().toString().isEmpty()) { 
 					GUImessageWindow message = new GUImessageWindow (GUIaddNewEmployee.this, "No new employee has been added. Both first and last name must be filled out!");
 				}
-				else if(EmployeePool.getAllEmployeeNamesAsArrayList().contains(textField.getText().trim().toUpperCase() + ", " + textField_1.getText().trim().toUpperCase())) {
-						GUImessageWindow message = new GUImessageWindow(GUIaddNewEmployee.this, "The employee pool already contains this name. Duplicate entries are not allowed. Please check the employee pool.");
-				}
-				else
-				{if(!chckbxNewCheckBox.isSelected() && !chckbxNewCheckBox_1.isSelected() && !chckbxNewCheckBox_2.isSelected() && !chckbxNewCheckBox_3.isSelected()) {
+				
+				else if(!chckbxNewCheckBox.isSelected() && !chckbxNewCheckBox_1.isSelected() && !chckbxNewCheckBox_2.isSelected() && !chckbxNewCheckBox_3.isSelected()) {
 					GUImessageWindow message = new GUImessageWindow(GUIaddNewEmployee.this, "You must select at least one shift type to add an employee! Employee not added.");
 				}
-					else {
+				else if(EmployeePool.getAllEmployeeNamesAsArrayList().contains(textField.getText().trim().toUpperCase() + ", " + textField_1.getText().trim().toUpperCase())){
+							System.out.println("found one");
+							boolean foundOne = false;
+
+							for(Employee emp : EmployeePool.getAllEmployeeDetails()) {
+				//				System.out.println(emp.getEmployeeDetailsAsString().toUpperCase());
+				//				System.out.println((textField.getText().trim() + ", " + textField_1.getText().trim()).toUpperCase());
+								if(emp.getEmployeeDetailsAsString().toUpperCase().equals((textField.getText().trim() + ", " + textField_1.getText().trim()).toUpperCase())
+									&& emp.getShiftDetails().stream().sorted().collect(Collectors.toList()).containsAll(shifts)
+										)																							
+								{
+				//					System.out.println("found the exact one with a matching shift type!");
+									foundOne = true;
+				//					System.out.println(foundOne);
+
+//									GUImessageWindow message = new GUImessageWindow(GUIaddNewEmployee.this, "The employee pool already contains this name with the same shift type(s). Duplicate entries are not allowed. If you'd like to add the same employee with a different shift type, please select another shift type.");
+//									break;
+									}
+															
+							} //close for
+							if(foundOne) {
+								GUImessageWindow message = new GUImessageWindow(GUIaddNewEmployee.this, "The employee pool already contains this name with the same shift type(s). Duplicate entries are not allowed. If you'd like to add the same employee with a different shift type, please select another shift type.");
+							}
+							else  {
+								Employee newEmployee = new Employee(textField.getText().toString().trim().toUpperCase(),  //capitalise last name
+									//capitalise the 1st letter	of the last name:
+										(textField_1.getText().toString().trim().substring(0, 1).toUpperCase() + textField_1.getText().toString().trim().substring(1, textField_1.getText().toString().trim().length())), 
+											chckbxNewCheckBox.isSelected(), chckbxNewCheckBox_1.isSelected(), chckbxNewCheckBox_2.isSelected(), 
+											chckbxNewCheckBox_3.isSelected(), textField_2.getText().toString(), textField_3.getText().toString(), textField_4.getText().toString(),
+											selectedNamesPrefers, selectedNamesAvoids);		
+//							System.out.println("the penultimate else if executes");
+								EmployeePool.addEmployeeToDatabase(newEmployee);
+								dispose();							
+							} //close else
+				} //close else if
+//						GUImessageWindow message = new GUImessageWindow(GUIaddNewEmployee.this, "The employee pool already contains this name. Duplicate entries are not allowed. Please check the employee pool.");
+	
+				
+				
+				else {
 					Employee newEmployee = new Employee(textField.getText().toString().trim().toUpperCase(),  //capitalise last name
 							//capitalise the 1st letter	of the last name:
 						(textField_1.getText().toString().trim().substring(0, 1).toUpperCase() + textField_1.getText().toString().trim().substring(1, textField_1.getText().toString().trim().length())), 
 							chckbxNewCheckBox.isSelected(), chckbxNewCheckBox_1.isSelected(), chckbxNewCheckBox_2.isSelected(), 
 							chckbxNewCheckBox_3.isSelected(), textField_2.getText().toString(), textField_3.getText().toString(), textField_4.getText().toString(),
 							selectedNamesPrefers, selectedNamesAvoids);		
-
+//					System.out.println("the last else block executes");
 					EmployeePool.addEmployeeToDatabase(newEmployee);
 					dispose();
-					}
-				}
-			}
-		});
+					} //close else
+				} //close actionPerformed
+		}); //close ActionListener
 		panel_1.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Cancel");

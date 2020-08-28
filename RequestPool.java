@@ -30,7 +30,7 @@ public class RequestPool implements Serializable{
 		return requestPool;
 	}
 	
-	public static Boolean requestAlreadyEntered(String employee) {
+	public static Boolean requestAlreadyEntered(String employee, List<Integer> shifts) {
 		namePresent = false;
 		try {
 			requestPool = deserialize();	
@@ -39,13 +39,15 @@ public class RequestPool implements Serializable{
 			}	
 		
 		for(Request r : requestPool)
-			if(r.getEmployee().getEmployeeDetailsAsString().equals(employee)) {
+			if(r.getEmployee().getEmployeeDetailsAsString().equals(employee)
+				&& 	r.getEmployee().getShiftDetails().containsAll(shifts)
+					) {
 				namePresent = true;
 			}
 		return namePresent;
 	}
 	
-	public static Boolean employeeHasARequest(String employee) {
+	public static Boolean employeeHasARequest(String employee, List<Integer> shifts) {
 		Boolean employeeHasARequest = false;
 		
 		try {
@@ -58,7 +60,9 @@ public class RequestPool implements Serializable{
 			return false;
 		else
 			for(Request r : requestPool)
-				if(r.getEmployee().getEmployeeDetailsAsString().equals(employee))
+				if(r.getEmployee().getEmployeeDetailsAsString().equals(employee)
+						&& r.getEmployee().getShiftDetails().containsAll(shifts)
+						)
 					employeeHasARequest = true;	
 		
 		return employeeHasARequest;
@@ -76,7 +80,7 @@ public class RequestPool implements Serializable{
 			
 	}
 	
-	public static void deleteRequest(Employee employee) {
+	public static void deleteRequest(Employee employee, List<Integer> shifts) {
 		Request requestToDelete = new Request();
 		try {
 			requestPool = deserialize();	
@@ -85,7 +89,9 @@ public class RequestPool implements Serializable{
 			}
 		
 		for(Request r : requestPool) 
-			if(r.getEmployee().getEmployeeDetailsAsString().contentEquals(employee.getEmployeeDetailsAsString()))
+			if(r.getEmployee().getEmployeeDetailsAsString().contentEquals(employee.getEmployeeDetailsAsString())
+					&& r.getEmployee().getShiftDetails().containsAll(shifts)
+					)
 				requestToDelete = r;
 		requestPool.remove(requestToDelete);
 		serialize();
@@ -93,7 +99,7 @@ public class RequestPool implements Serializable{
 		
 
 	
-	public static ArrayList<Integer> loadRequest(String employee) {
+	public static ArrayList<Integer> loadRequest(String employee, List<Integer> shifts) {
 //must return an ArrayList of days for the calendarPanel to be rebuilt
 	Set<String> returnedDates  = new HashSet<>();
 	
@@ -104,7 +110,9 @@ public class RequestPool implements Serializable{
 		}
 		
 		for(Request r : requestPool)
-			if(r.getEmployee().getEmployeeDetailsAsString().equals(employee))
+			if(r.getEmployee().getEmployeeDetailsAsString().equals(employee)
+				&& r.getEmployee().getShiftDetails().containsAll(shifts)	
+					)
 				returnedDates = r.getRequestedDates();
 		
 		return parsedDates(returnedDates);

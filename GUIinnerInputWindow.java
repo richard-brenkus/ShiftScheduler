@@ -116,9 +116,9 @@ public class GUIinnerInputWindow extends JDialog{
 		calendarFrame.setBounds(21, 11, 529, 206);
 		contentPanel.add(calendarFrame);
 		
-		if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString())) {
-			RequestPool.loadRequest(emp.getEmployeeDetailsAsString());
-			calendar = new GUIcalendarPanel(calendarFrame, requestedDays, RequestPool.loadRequest(emp.getEmployeeDetailsAsString()));
+		if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails())) {
+			RequestPool.loadRequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails());
+			calendar = new GUIcalendarPanel(calendarFrame, requestedDays, RequestPool.loadRequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()));
 		}
 		else 
 			calendar = new GUIcalendarPanel(calendarFrame, requestedDays);	
@@ -147,7 +147,7 @@ public class GUIinnerInputWindow extends JDialog{
 		JButton btnDeleteRequest = new JButton("Delete");
 		btnDeleteRequest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RequestPool.deleteRequest(emp);
+				RequestPool.deleteRequest(emp, emp.getShiftDetails());
 				GUIinnerInputWindow.this.dispose();
 				RequestPool.showRequestPool();
 			}
@@ -174,10 +174,10 @@ public class GUIinnerInputWindow extends JDialog{
 		contentPanel.add(previousDatesTextField);
 		previousDatesTextField.setColumns(10);
 		
-		if(RequestPool.employeeHasARequest(emp.getEmployeeDetailsAsString())) {
+		if(RequestPool.employeeHasARequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails())) {
 			btnDeleteRequest.setVisible(true);
 			lblNewLabel_5.setVisible(true);
-			previousDatesTextField.append(RequestPool.loadRequest(emp.getEmployeeDetailsAsString()).stream().sorted().collect(Collectors.toList()).toString().substring(1, RequestPool.loadRequest(emp.getEmployeeDetailsAsString()).toString().length()-1));
+			previousDatesTextField.append(RequestPool.loadRequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).stream().sorted().collect(Collectors.toList()).toString().substring(1, RequestPool.loadRequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).toString().length()-1));
 			previousDatesTextField.setVisible(true);
 		}
 		ArrayList<String> selectedNamesPrefers = new ArrayList<>();
@@ -203,11 +203,11 @@ public class GUIinnerInputWindow extends JDialog{
 						selectedNamesPrefers.addAll(combineWithEmployeesList.getSelectedValuesList());
 						selectedNamesAvoids.addAll(avoidEmployeesList.getSelectedValuesList());
 						if (requestedDays.isEmpty()) {
-							GUImessageWindow message = new GUImessageWindow(GUIinnerInputWindow.this, "You cannot create a shift request without having selected at least one dayfrom the calendar. Shift request not created.");								
+							GUImessageWindow message = new GUImessageWindow(GUIinnerInputWindow.this, "You cannot create a shift request without having selected at least one day from the calendar. Shift request not created.");								
 							} //close if
 						
-						else if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString())) {
-							RequestPool.deleteRequest(emp);
+						else if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails())) {
+							RequestPool.deleteRequest(emp, emp.getShiftDetails());
 							GUImessageWindow message = new GUImessageWindow(GUIinnerInputWindow.this, "The request pool already contained a request for " + emp.getEmployeeDetailsAsString() + ". The previous request has been replaced with the new one.");
 							Request request = new Request(emp, priorityBoxInt, requestedDays, selectedNamesPrefers, selectedNamesAvoids, shiftCountBoxInt, weekendBoxInt);
 							}

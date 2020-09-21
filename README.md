@@ -64,6 +64,6 @@ The second part I didn't create myself is the IntStream.rangeClosed stream in th
 
 It took me about 6 weeks to design, write, debug and test the Shift Scheduler app.
 
-The runnable file ShiftScheduler.jar that I've uploaded works with JRE 11.0.2 available here: https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html
+The runnable file ShiftScheduler Beta.jar that I've uploaded works with JRE 11.0.2 available here: https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html
 
 The class Supercalendar (Supercalendar.java) is arguably the most complex class in this program. 

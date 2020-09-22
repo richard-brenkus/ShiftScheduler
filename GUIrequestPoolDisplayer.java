@@ -39,7 +39,7 @@ public class GUIrequestPoolDisplayer extends JFrame{
 		int rows = requestPool.size();
 		
 		table = new JTable();
-		table.setModel(new DefaultTableModel(rows+2, 7));
+		table.setModel(new DefaultTableModel(rows+2, 8));
 
 		table.getColumnModel().getColumn(0).setPreferredWidth(146);
 		table.getColumnModel().getColumn(1).setPreferredWidth(45);
@@ -48,6 +48,8 @@ public class GUIrequestPoolDisplayer extends JFrame{
 		table.getColumnModel().getColumn(4).setPreferredWidth(117);
 		table.getColumnModel().getColumn(5).setPreferredWidth(104);
 		table.getColumnModel().getColumn(6).setPreferredWidth(131);
+		table.getColumnModel().getColumn(7).setPreferredWidth(45);
+
 		table.setCellSelectionEnabled(true);
 		table.getTableHeader().setReorderingAllowed(true);
 		
@@ -58,7 +60,11 @@ public class GUIrequestPoolDisplayer extends JFrame{
 		table.setValueAt("Would like to avoid", 0, 4);
 		table.setValueAt("Amount of shifts", 0, 5);
 		table.setValueAt("Amount of weekends", 0, 6);
+		table.setValueAt("Shift type", 0, 7);
 
+
+		requestPool.sort((r1, r2) -> r1.getEmployee().getEmployeeDetailsAsString().compareTo(r2.getEmployee().getEmployeeDetailsAsString()));
+		
 		for(int x = 0; x<requestPool.size(); x++) {
 			table.setValueAt(requestPool.get(x).getEmployee().getEmployeeDetailsAsString(), x+2, 0);
 		}
@@ -74,6 +80,8 @@ public class GUIrequestPoolDisplayer extends JFrame{
 			table.setValueAt(requestPool.get(x).getShiftCount(), x+2, 5);
 		for(int x = 0; x<requestPool.size(); x++)
 			table.setValueAt(requestPool.get(x).getWeekendCount(), x+2, 6);
+		for(int x = 0; x<requestPool.size(); x++)
+			table.setValueAt(requestPool.get(x).getEmployee().getShiftDetails(), x+2, 7);
 		
 		panel.add(table, BorderLayout.CENTER);
 		contentPane.add(scrollPane, BorderLayout.CENTER);

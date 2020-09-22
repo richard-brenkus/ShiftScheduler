@@ -97,7 +97,7 @@ public class GUIinnerInputWindow extends JDialog{
 		priorityBox.setSelectedIndex(2);
 		priorityBox.setToolTipText("set the priority from 1--highest to 5--lowest");
 		priorityBox.setBounds(376, 320, 56, 22);
-		contentPanel.add(priorityBox);
+//		contentPanel.add(priorityBox);
 		
 		JLabel lblNewLabel = new JLabel("Look for combinations with:");
 		lblNewLabel.setBounds(10, 228, 167, 14);
@@ -116,9 +116,9 @@ public class GUIinnerInputWindow extends JDialog{
 		calendarFrame.setBounds(21, 11, 529, 206);
 		contentPanel.add(calendarFrame);
 		
-		if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString())) {
-			RequestPool.loadRequest(emp.getEmployeeDetailsAsString());
-			calendar = new GUIcalendarPanel(calendarFrame, requestedDays, RequestPool.loadRequest(emp.getEmployeeDetailsAsString()));
+		if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails())) {
+			requestedDays = RequestPool.loadRequest1(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).getRequestedDates();
+			calendar = new GUIcalendarPanel(calendarFrame, requestedDays, RequestPool.loadRequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()));
 		}
 		else 
 			calendar = new GUIcalendarPanel(calendarFrame, requestedDays);	
@@ -128,7 +128,7 @@ public class GUIinnerInputWindow extends JDialog{
 		shiftCountBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
 		shiftCountBox.setSelectedIndex(1);
 		shiftCountBox.setBounds(376, 251, 56, 22);
-		contentPanel.add(shiftCountBox);
+//		contentPanel.add(shiftCountBox);
 		
 		JLabel lblNewLabel_3 = new JLabel("Shift count:");
 		lblNewLabel_3.setBounds(376, 228, 80, 14);
@@ -136,9 +136,9 @@ public class GUIinnerInputWindow extends JDialog{
 		
 		JComboBox weekendBox = new JComboBox();
 		weekendBox.setToolTipText("set the number of Saturday or Sunday shifts");
-		weekendBox.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2"}));
+		weekendBox.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3"}));
 		weekendBox.setBounds(455, 251, 56, 22);
-		contentPanel.add(weekendBox);
+//		contentPanel.add(weekendBox);
 		
 		JLabel lblNewLabel_4 = new JLabel("Weekends:");
 		lblNewLabel_4.setBounds(455, 228, 84, 14);
@@ -147,7 +147,7 @@ public class GUIinnerInputWindow extends JDialog{
 		JButton btnDeleteRequest = new JButton("Delete");
 		btnDeleteRequest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RequestPool.deleteRequest(emp);
+				RequestPool.deleteRequest(emp, emp.getShiftDetails());
 				GUIinnerInputWindow.this.dispose();
 				RequestPool.showRequestPool();
 			}
@@ -174,14 +174,29 @@ public class GUIinnerInputWindow extends JDialog{
 		contentPanel.add(previousDatesTextField);
 		previousDatesTextField.setColumns(10);
 		
-		if(RequestPool.employeeHasARequest(emp.getEmployeeDetailsAsString())) {
+		if(RequestPool.employeeHasARequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails())) {
 			btnDeleteRequest.setVisible(true);
 			lblNewLabel_5.setVisible(true);
-			previousDatesTextField.append(RequestPool.loadRequest(emp.getEmployeeDetailsAsString()).stream().sorted().collect(Collectors.toList()).toString().substring(1, RequestPool.loadRequest(emp.getEmployeeDetailsAsString()).toString().length()-1));
+			int shiftSelectedIndex = 1;
+			int weekendSelectedIndex = 0;
+			int prioritySelectedIndex = 3;
+			
+			shiftSelectedIndex = RequestPool.loadRequest1(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).getShiftCount()-1;
+			shiftCountBox.setSelectedIndex(shiftSelectedIndex);
+			weekendSelectedIndex = RequestPool.loadRequest1(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).getWeekendCount();
+			weekendBox.setSelectedIndex(weekendSelectedIndex);
+			prioritySelectedIndex = RequestPool.loadRequest1(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).getPriority() -1;
+			priorityBox.setSelectedIndex(prioritySelectedIndex);
+			previousDatesTextField.append(RequestPool.loadRequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).stream().sorted().collect(Collectors.toList()).toString().substring(1, RequestPool.loadRequest(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()).toString().length()-1));
 			previousDatesTextField.setVisible(true);
 		}
 		ArrayList<String> selectedNamesPrefers = new ArrayList<>();
 		ArrayList<String> selectedNamesAvoids = new ArrayList<>();
+		
+		contentPanel.add(shiftCountBox);
+		contentPanel.add(weekendBox);
+		contentPanel.add(priorityBox);
+
 		
 		Boolean prefersOrAvoids = true;
 		
@@ -203,29 +218,32 @@ public class GUIinnerInputWindow extends JDialog{
 						selectedNamesPrefers.addAll(combineWithEmployeesList.getSelectedValuesList());
 						selectedNamesAvoids.addAll(avoidEmployeesList.getSelectedValuesList());
 						if (requestedDays.isEmpty()) {
-							GUImessageWindow message = new GUImessageWindow(GUIinnerInputWindow.this, "You cannot create a shift request without having selected at least one dayfrom the calendar. Shift request not created.");								
+							GUImessageWindow message = new GUImessageWindow(GUIinnerInputWindow.this, "You cannot create a shift request without having selected at least one day from the calendar. Shift request not created.");								
 							} //close if
 						
-						else if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString())) {
-							RequestPool.deleteRequest(emp);
-							GUImessageWindow message = new GUImessageWindow(GUIinnerInputWindow.this, "The request pool already contained a request for " + emp.getEmployeeDetailsAsString() + ". The previous request has been replaced with the new one.");
+						else if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails())) {
+							RequestPool.deleteRequest(emp, emp.getShiftDetails());
 							Request request = new Request(emp, priorityBoxInt, requestedDays, selectedNamesPrefers, selectedNamesAvoids, shiftCountBoxInt, weekendBoxInt);
+				       		GUIinnerInputWindow.this.dispose();
 							}
 						else{if(emp.getAvoidedCoworkers().isEmpty() && emp.getPreferredCoworkers().isEmpty()) {						
 								Request request = new Request(emp, priorityBoxInt, requestedDays, selectedNamesPrefers, selectedNamesAvoids, shiftCountBoxInt, weekendBoxInt);
+					       		GUIinnerInputWindow.this.dispose();
 								}
 							else if (!emp.getAvoidedCoworkers().isEmpty() && emp.getPreferredCoworkers().isEmpty()){
-								Request request = new Request(emp, priorityBoxInt, requestedDays, selectedNamesPrefers, emp.getAvoidedCoworkers(), shiftCountBoxInt, weekendBoxInt);	
+								Request request = new Request(emp, priorityBoxInt, requestedDays, selectedNamesPrefers, emp.getAvoidedCoworkers(), shiftCountBoxInt, weekendBoxInt);
+					       		GUIinnerInputWindow.this.dispose();
 							}
 							else if (emp.getAvoidedCoworkers().isEmpty() && !emp.getPreferredCoworkers().isEmpty()){
 								Request request = new Request(emp, priorityBoxInt, requestedDays, emp.getPreferredCoworkers(), selectedNamesAvoids, shiftCountBoxInt, weekendBoxInt);
+					       		GUIinnerInputWindow.this.dispose();
 								}
 							else if (!emp.getAvoidedCoworkers().isEmpty() && !emp.getPreferredCoworkers().isEmpty()){
 								Request request = new Request(emp, priorityBoxInt, requestedDays, emp.getPreferredCoworkers(), emp.getAvoidedCoworkers(), shiftCountBoxInt, weekendBoxInt);
+					       		GUIinnerInputWindow.this.dispose();
 								}
 						}
-						GUIinnerInputWindow.this.dispose();
-						RequestPool.showRequestPool();
+			//			RequestPool.showRequestPool();
 					}	// close actionPerformed
 				});		//close ActionListener
 			}	

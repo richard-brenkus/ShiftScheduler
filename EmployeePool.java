@@ -41,7 +41,7 @@ public class EmployeePool implements Serializable{
 		for (int x = 0; x < allEmployeeDetails.size(); x++) {
 			employeePoolAsStringArray[x] = allEmployeeDetails.get(x).getEmployeeDetailsAsString();
 		}
-						
+		Arrays.sort(employeePoolAsStringArray);				
 		return employeePoolAsStringArray;	
 	}
 	

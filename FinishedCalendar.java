@@ -22,11 +22,11 @@ public class FinishedCalendar implements Serializable{
 	private static String month, year;
 	private static Map<Integer, Set<Employee>> lastFiveDays, restoredDays, returnedDays;
 
-	public static void resetArchive(GUImainWindow owner) {
+	public static void resetArchive() {
 		returnedDays = loadLastFiveDays();
 		returnedDays.clear();
 		archiveAgain(returnedDays);
-		GUImessageWindow message = new GUImessageWindow(owner, "The last five days of the previous month have been deleted from the archive.");
+//		GUImessageWindow message = new GUImessageWindow("The last five days of the previous month have been deleted from the archive.");
 	}
 
 	public static void archiveLastFiveDays(GUImainWindow owner, Map<Integer, Map<Employee, Boolean>> supercalendar) {

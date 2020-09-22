@@ -50,9 +50,11 @@ public class GUIcalendarPanel extends JPanel {
                                        if(button[selection].getBackground().equals(Color.WHITE)) {
                                     	   button[selection].setBackground(Color.GREEN);
                                        		requestedDays.add(setPickedDate());
+                                       		System.out.println(requestedDays.toString());
                                        		 }
                                        else {
                                     	   button[selection].setBackground(Color.WHITE);
+                                      		System.out.println(requestedDays.toString());
                                     	   requestedDays.remove(setPickedDate());
                                             }
                                  }
@@ -110,9 +112,6 @@ public class GUIcalendarPanel extends JPanel {
                 String[] header = { "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
                 //create JPanel object and set layout
                 JPanel p1 = new JPanel(new GridLayout(7, 7));
-                
-               
-
                 //set size
                 p1.setPreferredSize(new Dimension(430, 120));
                 //for loop condition
@@ -204,7 +203,7 @@ public class GUIcalendarPanel extends JPanel {
                 parent.getContentPane().add(p2, BorderLayout.SOUTH);
                 //call method
                 displayDate();
-        }
+           }
         
         public void displayDate() 
         {

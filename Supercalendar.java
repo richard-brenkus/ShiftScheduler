@@ -180,7 +180,7 @@ public class Supercalendar implements Serializable{
 			} //close for monthLength
 		
 //create output, show the calendar with all names:
-			GUIoutputCalendar outputWindow = new GUIoutputCalendar(supercalendar1, supercalendar2, supercalendar3, supercalendar4, month, year);			
+			GUIoutputCalendar outputWindow = new GUIoutputCalendar(supercalendar1, supercalendar2, supercalendar3, supercalendar4, month, year, weekends);			
 	} //close requestProcessor
 	
 						
@@ -189,12 +189,22 @@ public class Supercalendar implements Serializable{
 		int currentYear    = Integer.parseInt(year);
 		int currentMonth = Integer.parseInt(month);
 		List<Integer> weekends = new ArrayList<>();
+		List<Integer> holidayList = new ArrayList<>();
 
 		IntStream.rangeClosed(1,YearMonth.of(currentYear, currentMonth).lengthOfMonth())
 			.mapToObj(day -> LocalDate.of(currentYear, currentMonth, day))
 			.filter(date -> date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)
 			.forEach(date -> weekends.add(date.getDayOfMonth()));
-					     
+				
+		BankHolidays bankHolidays = new BankHolidays();	
+		holidayList = bankHolidays.holidayHandler(currentMonth);
+
+		for(Integer i : holidayList)
+			if(!weekends.contains(i))
+				weekends.add(i);
+		
+		weekends.sort(null);
+							     
 		return weekends;
 	} //close weekendFinder
 					
@@ -205,8 +215,11 @@ public class Supercalendar implements Serializable{
 		List<Integer> dayRangeChecker = new ArrayList<>(Arrays.asList(day, day+1, day+2, day+3, day+4, day+5, day-1, day-2, day-3, day-4, day-5));
 
 		for(Integer probe : dayRangeChecker) {
-			if(supercalendar.containsKey(probe) && supercalendar.get(probe).containsKey(r.getEmployee()) && supercalendar.get(probe).get(r.getEmployee()).equals(true))
+			if(supercalendar.containsKey(probe) && supercalendar.get(probe).containsKey(r.getEmployee()) && supercalendar.get(probe).get(r.getEmployee()).equals(true)
+					|| (supercalendar.containsKey(probe) && supercalendar.get(probe).keySet().stream().anyMatch(x -> x.getEmployee().getEmployeeDetailsAsString().equals(r.getEmployee().getEmployeeDetailsAsString()) && supercalendar.get(probe).get(x.getEmployee()).equals(true)))
+		)		{
 				dayIsSafe = false;
+			} //close if
 		} //close for
 		return dayIsSafe;
 	} //close dayChecker
@@ -306,14 +319,18 @@ public class Supercalendar implements Serializable{
 							dailyEmployeeList.add(r.getEmployee());
 							supercalendarInput.put(i,  dailyEmployeeList);
 							dayFiller(i, r);
-				} //close if !dailyEmployeeList.contains employee
+						} //close if !dailyEmployeeList.contains employee
 			} //close if daychecker
 		} //close if shift type is shiftType && weekend		
 	} //close searcherWithWeekends
 	
 	public static void searcher(Request r, int shiftType, int day, Map<Integer, List<Employee>> supercalendarInput) {
+		
+		List<Integer> weekendsOnly = r.getIntegerDates().stream().filter((i) -> weekends.contains(i)).collect(Collectors.toList());
+		
 		if(r.getEmployee().getShiftDetails().contains(shiftType)) {
-			if(dayChecker(day, r, supercalendarInput) && shiftCounter.get(r.getEmployee()) < r.getShiftCount()
+			if(dayChecker(day, r, supercalendarInput) && shiftCounter.get(r.getEmployee()) < r.getShiftCount() && !weekendsOnly.contains(day)
+	//				&& (weekendCounter.get(r.getEmployee()) <= r.getWeekendCount() || r.getIntegerDates().stream().noneMatch(x -> weekends.contains(x)))	//new conditions added
 					&& previousMonthChecker(day, r)
 					&& peerFinder(day, r, preferEmployees)
 					&& peerShunner(day, r, avoidEmployees)

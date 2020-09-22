@@ -1,6 +1,7 @@
 package com.richardbrenkus;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 public class GUIoutputCalendar extends JFrame {
 	private JPanel contentPane;
@@ -23,7 +26,7 @@ public class GUIoutputCalendar extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GUIoutputCalendar(Map<Integer, List<Employee>> supercalendar1, Map<Integer, List<Employee>> supercalendar2, Map<Integer, List<Employee>> supercalendar3, Map<Integer, List<Employee>>supercalendar4, String month, String year) {
+	public GUIoutputCalendar(Map<Integer, List<Employee>> supercalendar1, Map<Integer, List<Employee>> supercalendar2, Map<Integer, List<Employee>> supercalendar3, Map<Integer, List<Employee>>supercalendar4, String month, String year, List<Integer> wknds ) {
 		setTitle("Month Calendar");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -86,11 +89,17 @@ public class GUIoutputCalendar extends JFrame {
 		});
 		panel.add(table, BorderLayout.CENTER);
 		contentPane.add(scrollPane, BorderLayout.CENTER);
-		
+							
 		for(int i = 1; i<=supercalendar1.size(); i++) {
 			String day = String.format("%02d", i);
 			table.setValueAt(day + "-" + month + "-" + year, i+1, 0);
+			
+			if(wknds.contains(i)) {
+				table.setValueAt(day + "-" + month + "-" + year + " ***** ", i+1, 0);
+				
+			}
 		}
+
 		
 		table.setValueAt("Date", 0, 0);
 		table.setValueAt("Shift type 1", 0, 1);

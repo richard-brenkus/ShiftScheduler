@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 public class GUIshiftInputWindow extends JDialog {
 	private JPanel contentPane;
 	private JPanel innerContentPane;
-	private Set<Employee> inputList;
+	private List<Employee> inputList;
 	private JButton btnNewButton;
 	
 	public GUIshiftInputWindow(Set<Employee> restoredList, Frame owner, String windowName) {
@@ -30,18 +30,20 @@ public class GUIshiftInputWindow extends JDialog {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-				
-		inputList = restoredList;
-				
-		for(Employee emp : restoredList) {
+		
+		inputList = new ArrayList<>();
+		inputList.addAll(restoredList);
+		inputList.sort((e1, e2) -> e1.getEmployeeDetailsAsString().compareTo(e2.getEmployeeDetailsAsString()) );
+
+		for(Employee emp : inputList) {
 			JButton btnNewButton = new JButton(emp.getEmployeeDetailsAsString());
 			panel.add(btnNewButton);
-			if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString()))
+			if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()))
 				btnNewButton.setBackground(Color.GREEN);
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					GUIinnerInputWindow innerWindow = new GUIinnerInputWindow(GUIshiftInputWindow.this, emp);
-					if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString()))
+					if(RequestPool.requestAlreadyEntered(emp.getEmployeeDetailsAsString(), emp.getShiftDetails()))
 						btnNewButton.setBackground(Color.GREEN);
 				}
 			});

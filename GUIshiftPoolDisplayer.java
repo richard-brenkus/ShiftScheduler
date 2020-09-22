@@ -21,7 +21,6 @@ public class GUIshiftPoolDisplayer extends JDialog{
 		if(shiftPoolDatabase.isEmpty())
 			message = new GUImessageWindow(window, "The shift pool is empty. Click on 'Create shift pool', or add employees first.");
 		else {
-		
 		setTitle("Shift pool");
 		setModal(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -38,20 +37,24 @@ public class GUIshiftPoolDisplayer extends JDialog{
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		textArea.append("\n" + "Shift type 1: "+ "\n");
-		for (String s: shiftPoolDatabase.get(0).stream().filter(e -> e.getShiftDetails().contains(1)).map(emp -> emp.getEmployeeDetailsAsString()).collect(Collectors.toList()))
-			textArea.append(s + "; ");
+		textArea.append("\n");
+		for (String s: shiftPoolDatabase.get(0).stream().filter(e -> e.getShiftDetails().contains(1)).map(emp -> emp.getEmployeeDetailsAsString()).sorted().collect(Collectors.toList()))
+			textArea.append(s + "; " +  "\n");
 		textArea.append("\n");
 		textArea.append("\n" + "Shift type 2: " + "\n");
-		for (String s: shiftPoolDatabase.get(1).stream().filter(e -> e.getShiftDetails().contains(2)).map(emp -> emp.getEmployeeDetailsAsString()).collect(Collectors.toList()))
-			textArea.append(s + "; ");
+		textArea.append("\n");
+		for (String s: shiftPoolDatabase.get(1).stream().filter(e -> e.getShiftDetails().contains(2)).map(emp -> emp.getEmployeeDetailsAsString()).sorted().collect(Collectors.toList()))
+			textArea.append(s + "; " +  "\n");
 		textArea.append("\n");
 		textArea.append("\n" + "Shift type 3: " +  "\n");
-		for (String s: shiftPoolDatabase.get(2).stream().filter(e -> e.getShiftDetails().contains(3)).map(emp -> emp.getEmployeeDetailsAsString()).collect(Collectors.toList()))
-			textArea.append(s + "; ");
+		textArea.append("\n");
+		for (String s: shiftPoolDatabase.get(2).stream().filter(e -> e.getShiftDetails().contains(3)).map(emp -> emp.getEmployeeDetailsAsString()).sorted().collect(Collectors.toList()))
+			textArea.append(s + "; " +  "\n");
 		textArea.append("\n");
 		textArea.append("\n" + "Shift type 4: " +  "\n");
-		for (String s: shiftPoolDatabase.get(3).stream().filter(e -> e.getShiftDetails().contains(4)).map(emp -> emp.getEmployeeDetailsAsString()).collect(Collectors.toList()))
-			textArea.append(s + "; ");
+		textArea.append("\n");
+		for (String s: shiftPoolDatabase.get(3).stream().filter(e -> e.getShiftDetails().contains(4)).map(emp -> emp.getEmployeeDetailsAsString()).sorted().collect(Collectors.toList()))
+			textArea.append(s + "; " +  "\n");
 					
 		textArea.setEditable(false);
 		panel.add(textArea, BorderLayout.CENTER);

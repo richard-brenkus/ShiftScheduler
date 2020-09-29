@@ -52,12 +52,13 @@ public class Supercalendar implements Serializable{
 		ignorePreviousMonth = previousMonth;
 		archiveNextMonth = archiveNext;
 		lastFiveDays = FinishedCalendar.loadLastFiveDays();
+	
+//sort the modified list in an ascending order, so that the requests with the least amount of days get checked first:
+		modifiedList.sort((Request r1, Request r2) -> r1.getIntegerDatesSize() - r2.getIntegerDatesSize());
 		
-//sort the modified list in an ascending order, so that the requests with the least amount of days get checked first:		
 		for(int day = 1; day <= monthLength; day++) {
 			for(int x = 0; x<modifiedList.size(); x++) {
-				supercalendarLine = new HashMap<>();
-				modifiedList.sort((Request r1, Request r2) -> r1.getIntegerDatesSize() - r2.getIntegerDatesSize());
+				supercalendarLine = new HashMap<>();	
 				for(Request r : modifiedList) {
 					if(r.getIntegerDates().contains(day) && r.getEmployee().getShiftDetails().contains(1)) {
 						supercalendarLine.put(r.getEmployee(), false);
@@ -71,11 +72,12 @@ public class Supercalendar implements Serializable{
 					if(r.getIntegerDates().contains(day) && r.getEmployee().getShiftDetails().contains(4)) {
 						supercalendarLine.put(r.getEmployee(), false);
 					} //close if contains(day) && shift type 4				
-				}//close for Request r : modifiedList
+				}//close for Request r : modifiedList			
 			} //close for modifiedList
+			
 			supercalendar.put(day, supercalendarLine);
 		} //close for monthLength
-		
+	
 //fill out the supercalendars with blanks of List<Employee>
 		for(int x = 1; x<=monthLength; x++) {
 			List<Employee> blankEmpList = new ArrayList<>();
@@ -105,16 +107,16 @@ public class Supercalendar implements Serializable{
 		for(Request r : modifiedList)
 			shiftCounter.put(r.getEmployee(), 0);
 						
-// initialize shiftCounter for each employee: <K,V> String, Integer			
+// initialize weekendCounter for each employee: <K,V> String, Integer			
 		weekendCounter = new HashMap<>();
 		for(Request r : modifiedList)
 			weekendCounter.put(r.getEmployee(), 0);		
 
 // loop through the calendar and modified request list
 		for (int x = 1; x<=monthLength; x++) {
-			for(Request r : modifiedList) 				
-				if(r.getIntegerDates().contains(x)) {
-					if(r.getPriority() == 1) {
+			for(Request r : modifiedList) 
+				if(r.getPriority() == 1 && r.getIntegerDates().contains(x)) {
+	//				if(r.getIntegerDates().contains(x)) {
 							/*check the following conditions:
 							 * -weekends? if yes, then check for shifts on the surrounding 5 days, if no shifts, then return true, else return false
 							 * -weekends < requested weekend count? 
@@ -131,9 +133,12 @@ public class Supercalendar implements Serializable{
 						searcher(r, 2, x, supercalendar2);
 						searcher(r, 3, x, supercalendar3);
 						searcher(r, 4, x, supercalendar4);
-					} //close if getPriority == 1
-								
-					else if (r.getPriority() == 2) {
+				} //close if getPriority == 1
+		} //close for monthLength
+		
+		for (int x = 1; x<=monthLength; x++) {
+			for(Request r : modifiedList) 	
+				if (r.getPriority() == 2 && r.getIntegerDates().contains(x)) {
 						searcherWithWeekends(r, 1, supercalendar1);
 						searcherWithWeekends(r, 2, supercalendar2);
 						searcherWithWeekends(r, 3, supercalendar3);
@@ -143,8 +148,12 @@ public class Supercalendar implements Serializable{
 						searcher(r, 3, x, supercalendar3);
 						searcher(r, 4, x, supercalendar4);
 					} //close if getPriority == 2
-									
-					else if(r.getPriority() == 3) {			
+			} //close for monthLength
+
+		
+		for (int x = 1; x<=monthLength; x++) {
+			for(Request r : modifiedList) 
+				if(r.getPriority() == 3 && r.getIntegerDates().contains(x)) {	
 						searcherWithWeekends(r, 1, supercalendar1);
 						searcherWithWeekends(r, 2, supercalendar2);
 						searcherWithWeekends(r, 3, supercalendar3);
@@ -154,8 +163,12 @@ public class Supercalendar implements Serializable{
 						searcher(r, 3, x, supercalendar3);
 						searcher(r, 4, x, supercalendar4);
 					} //close if getPriority == 3
-									
-					else if(r.getPriority() == 4) {					
+			} //close for monthLength
+
+		
+		for (int x = 1; x<=monthLength; x++) {
+			for(Request r : modifiedList) 
+				if(r.getPriority() == 4 && r.getIntegerDates().contains(x)) {
 						searcherWithWeekends(r, 1, supercalendar1);
 						searcherWithWeekends(r, 2, supercalendar2);
 						searcherWithWeekends(r, 3, supercalendar3);
@@ -164,9 +177,12 @@ public class Supercalendar implements Serializable{
 						searcher(r, 2, x, supercalendar2);
 						searcher(r, 3, x, supercalendar3);
 						searcher(r, 4, x, supercalendar4);
-					} //close if getPriority == 4
-									
-					else if(r.getPriority() == 5) {					
+				} //close if getPriority == 4
+			} //close for monthLength
+			
+		for (int x = 1; x<=monthLength; x++) {
+			for(Request r : modifiedList) 						
+				 if(r.getPriority() == 5 && r.getIntegerDates().contains(x)) {
 						searcherWithWeekends(r, 1, supercalendar1);
 						searcherWithWeekends(r, 2, supercalendar2);
 						searcherWithWeekends(r, 3, supercalendar3);
@@ -176,7 +192,6 @@ public class Supercalendar implements Serializable{
 						searcher(r, 3, x, supercalendar3);
 						searcher(r, 4, x, supercalendar4);
 					} //close if getPriority == 5		
-				} //close if r.getIntegerDates().contains(x)		
 			} //close for monthLength
 		
 //create output, show the calendar with all names:

@@ -109,25 +109,25 @@ public class GUIoutputCalendar extends JFrame {
 			
 		for(int i = 1; i<=supercalendar1.size(); i++) 
 			if(!supercalendar1.get(i).isEmpty())
-			table.setValueAt("MUDr. " + supercalendar1.get(i).stream().map(e -> e.getEmployeeDetailsAsString()).collect(Collectors.toList()).get(0).toString(), i+1, 1);
+			table.setValueAt("MUDr. " + supercalendar1.get(i).stream().map(e -> e.getLastName()).collect(Collectors.toList()).get(0).toString(), i+1, 1);
 			else
 			table.setValueAt(" ", i+1, 1);
 		
 		for(int i = 1; i<=supercalendar2.size(); i++) 
 			if(!supercalendar2.get(i).isEmpty())
-				table.setValueAt("MUDr. "+ supercalendar2.get(i).stream().map(e -> e.getEmployeeDetailsAsString()).collect(Collectors.toList()).get(0).toString(), i+1, 2);
+				table.setValueAt("MUDr. "+ supercalendar2.get(i).stream().map(e -> e.getLastName()).collect(Collectors.toList()).get(0).toString(), i+1, 2);
 			else
 				table.setValueAt(" ", i+1, 2);
 
 		for(int i = 1; i<=supercalendar3.size(); i++) 
 			if(!supercalendar3.get(i).isEmpty())
-				table.setValueAt("MUDr. " + supercalendar3.get(i).stream().map(e -> e.getEmployeeDetailsAsString()).collect(Collectors.toList()).get(0).toString(), i+1, 3);
+				table.setValueAt("MUDr. " + supercalendar3.get(i).stream().map(e -> e.getLastName()).collect(Collectors.toList()).get(0).toString(), i+1, 3);
 			else
 				table.setValueAt(" ", i+1, 3);
 
 		for(int i = 1; i<=supercalendar4.size(); i++)
 			if(!supercalendar4.get(i).isEmpty())
-				table.setValueAt("MUDr. " + supercalendar4.get(i).stream().map(e -> e.getEmployeeDetailsAsString()).collect(Collectors.toList()).get(0).toString(), i+1, 4);
+				table.setValueAt("MUDr. " + supercalendar4.get(i).stream().map(e -> e.getLastName()).collect(Collectors.toList()).get(0).toString(), i+1, 4);
 			else
 			table.setValueAt(" ", i+1, 4);
 				

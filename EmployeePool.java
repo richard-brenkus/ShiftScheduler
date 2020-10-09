@@ -19,6 +19,7 @@ public class EmployeePool implements Serializable{
     
     public static List<Employee> getAllEmployeeDetails(){
     	allEmployeeDetails = deserialize();
+    	allEmployeeDetails.sort((e1, e2) -> e1.getEmployeeDetailsAsString().compareTo(e2.getEmployeeDetailsAsString()) ); 
     	return allEmployeeDetails;
      }
 	
